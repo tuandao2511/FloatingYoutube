@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Youtube</string>
+    <string name="up_next">Up next</string>
+    <string name="search">Search</string>
+</resources>

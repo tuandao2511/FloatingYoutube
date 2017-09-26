@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <!--anh hien thi video -->
+    <ImageView
+        tools:src="@android:mipmap/sym_def_app_icon"
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="16dp"
+
+       />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_margin="16dp"
+        >
+        <!--anh logo-->
+        <ImageView
+            android:id="@+id/imageLogoView"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_margin="@dimen/customizeSpace"
+            android:layout_weight="2"
+            tools:src="@android:mipmap/sym_def_app_icon" />
+
+        <!--thong tin video -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:orientation="vertical">
+            <!--content cua kenh-->
+            <TextView
+                android:id="@+id/textTitleView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/customizeSpace"
+                android:layout_marginTop="@dimen/customizeSpace"
+                tools:text="bla bla bla bla bla bla" />
+            <!-- luot view va thong tin kenh-->
+            <TextView
+                android:id="@+id/textTitleChannelView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/customizeSpace"
+                tools:text="bla bla bla bla bla bla " />
+            <!--thoi gian -->
+            <TextView
+                android:id="@+id/textTimeView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="312312312312" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
