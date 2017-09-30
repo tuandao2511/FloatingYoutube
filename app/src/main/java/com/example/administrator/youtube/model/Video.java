@@ -16,11 +16,14 @@ public class Video {
     private String mChannelId;
     private String mEslapedTime;
     private int mDislikeCount;
+    private String mThumbnailsChannel;
+
+
 
     public Video(String id, String title, String thumbnails,
                  String titleChannel, int viewCount, int likeCount,
                  int dislikeCount, String durationString, String description,
-                 String channelId, String eslapedTime) {
+                 String channelId, String eslapedTime, String thumbnailsChannel) {
 
         mID = id;
         mTitle = title;
@@ -33,50 +36,56 @@ public class Video {
         mDesciption = description;
         mChannelId = channelId;
         mEslapedTime = eslapedTime;
+        mThumbnailsChannel = thumbnailsChannel;
+
     }
 
-    public String getmID() {
+    public String getID() {
         return mID;
     }
 
-    public String getmTitle() {
+    public String getTitle() {
         return mTitle;
     }
 
-    public String getmThumbnails() {
+    public String getThumbnails() {
         return mThumbnails;
     }
 
-    public int getmViewCount() {
+    public int getViewCount() {
         return mViewCount;
     }
 
-    public int getmLikeCount() {
+    public int getLikeCount() {
         return mLikeCount;
     }
 
-    public String getmTitleChannel() {
+    public String getTitleChannel() {
         return mTitleChannel;
     }
 
-    public String getmDurationString() {
+    public String getDurationString() {
         return mDurationString;
     }
 
-    public String getmDesciption() {
+    public String getDesciption() {
         return mDesciption;
     }
 
-    public String getmChannelId() {
+    public String getChannelId() {
         return mChannelId;
     }
 
-    public String getmEslapedTime() {
+    public String getEslapedTime() {
         return mEslapedTime;
     }
 
-    public int getmDislikeCount() {
+    public int getDislikeCount() {
         return mDislikeCount;
+    }
+
+    public String getThumbnailsChannel() {
+        return mThumbnailsChannel;
     }
 }
 

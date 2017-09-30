@@ -1,68 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="300dp"
     xmlns:tools="http://schemas.android.com/tools"
     >
     <!--anh hien thi video -->
     <ImageView
         tools:src="@android:mipmap/sym_def_app_icon"
-        android:id="@+id/imageView"
+        android:id="@+id/img_thumnail"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:scaleType="centerCrop"
+        android:layout_height="200dp"
+        android:scaleType="fitXY"
         android:layout_marginTop="16dp"
-
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
        />
+    <TextView
+        android:id="@+id/tv_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignBottom="@+id/img_thumnail"
+        android:background="@color/colorBlack"
+        android:textColor="@color/colorWhite"
+        tools:text="3:40"
+        android:textSize="10dp"
+        android:gravity="center"
+        />
+    <ImageView
+        android:id="@+id/thumbnailsChannel"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="fitXY"
+        tools:src="@android:mipmap/sym_def_app_icon"
+        android:layout_alignTop="@+id/relativeLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:layout_weight="1"
-        android:layout_margin="16dp"
-        >
+        android:layout_below="@+id/img_thumnail"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_toRightOf="@+id/imageLogoView"
+        android:layout_toEndOf="@+id/imageLogoView"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/relativeLayout">
         <!--anh logo-->
-        <ImageView
-            android:id="@+id/imageLogoView"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_margin="@dimen/customizeSpace"
-            android:layout_weight="2"
-            tools:src="@android:mipmap/sym_def_app_icon" />
+
 
         <!--thong tin video -->
+
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="8"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_toLeftOf="@+id/imv_favorite"
+            android:layout_toStartOf="@+id/imv_favorite">
             <!--content cua kenh-->
             <TextView
-                android:id="@+id/textTitleView"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/customizeSpace"
-                android:layout_marginTop="@dimen/customizeSpace"
-                tools:text="bla bla bla bla bla bla" />
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="12dp"
+                android:text="14dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textStyle="bold"
+                tools:text="bla bla bla bla bla bla bla bla bla " />
             <!-- luot view va thong tin kenh-->
             <TextView
-                android:id="@+id/textTitleChannelView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/customizeSpace"
-                tools:text="bla bla bla bla bla bla " />
+                android:id="@+id/infoVideo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                android:maxLines="3"
+                android:ellipsize="end"
+                tools:text="June - 155k View - 2days " />
             <!--thoi gian -->
-            <TextView
-                android:id="@+id/textTimeView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="312312312312" />
+
 
         </LinearLayout>
 
+        <ImageView
+            android:src="@drawable/ic_menu_tround"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:id="@+id/imv_favorite" />
 
-    </LinearLayout>
 
-</LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

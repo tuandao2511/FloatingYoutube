@@ -1,7 +1,9 @@
 package com.example.administrator.youtube.method;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.administrator.youtube.constant.Constant;
 import com.example.administrator.youtube.model.Video;
 
 import org.joda.time.Interval;
@@ -38,6 +40,7 @@ public final class FetchDataVideos {
     private static final String LOG_TAG = FetchDataVideos.class.getSimpleName();
     private static final int REPONSE_CODE = 200;
     public static String nextPageToken;
+    private static String url_thumbnails;
 
     public static List<Video> FetchVideoData(String requestUrl) {
         try {
@@ -57,6 +60,26 @@ public final class FetchDataVideos {
         List<Video> videos = extractVideos(jsonReposne);
 
         return videos;
+    }
+
+    public static String FetchChannelData(String requestUrl) throws JSONException {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        URL url = createUrl(requestUrl);
+        String jsonReposne = null;
+        try {
+            jsonReposne = makeHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG,"Error closing input stream");
+        }
+
+        String urlThumbnailsChannel = extractThumbnails(jsonReposne);
+
+        return urlThumbnailsChannel;
     }
 
 
@@ -145,33 +168,27 @@ public final class FetchDataVideos {
 
 
                 String id = jsonObject.optString("id");
-                Log.v(LOG_TAG,"id la gi " +id);
                 String title = jsonObjectSnippet.optString("title");
-                Log.v(LOG_TAG,"title la gi " +title);
                 String thumbnails = jsonObjectDefault.optString("url");
-                Log.v(LOG_TAG,"thumbnails la gi " +thumbnails);
                 String channelTitle =jsonObjectSnippet.optString("channelTitle");
-                Log.v(LOG_TAG,"channelTitle la gi " +channelTitle);
                 int viewCount = jsonObjectStatistics.optInt("viewCount");
-                Log.v(LOG_TAG,"viewcount la gi " +viewCount);
                 int likeCount = jsonObjectStatistics.optInt("likeCount");
-                Log.v(LOG_TAG,"likeCount la gi " +likeCount);
                 int dislikeCount = jsonObjectStatistics.optInt("dislikeCount");
-                Log.v(LOG_TAG,"dislikeCount la gi " +dislikeCount);
                 String duration = jsonObjectContentDetails.optString("duration");
-                Log.v(LOG_TAG,"duration la gi " +duration);
                 String description = jsonObjectSnippet.optString("description");
                 String channelId = jsonObjectSnippet.optString("channelId");
-                Log.v(LOG_TAG,"channelId la gi " +channelId);
                 String dateOfPublished = jsonObjectSnippet.optString("publishedAt");
-                Log.v(LOG_TAG,"dateOfPublished la gi " +dateOfPublished);
 
                 /*covert string to ...*/
                 String period = calculateElapsedTime(dateOfPublished);
                 String covertedDuration = covertDuration(duration);
+
+                new LoadChannel(channelId).execute();
+
+
                 videos.add(new Video(id, title, thumbnails, channelTitle, viewCount,
                         likeCount, dislikeCount, covertedDuration, description,
-                        channelId,period));
+                        channelId,period, url_thumbnails));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -181,79 +198,115 @@ public final class FetchDataVideos {
         return videos;
     }
 
+    private static String extractThumbnails(String jsonReposne) throws JSONException {
+        JSONObject jsonRootObject = new JSONObject(jsonReposne);
+        JSONArray jsonArray = jsonRootObject.optJSONArray("items");
+        JSONObject jsonObject = jsonArray.optJSONObject(0);
+        JSONObject jsonObjectSnippet = jsonObject.optJSONObject("snippet");
+        JSONObject jsonObjectThumbnails = jsonObjectSnippet.optJSONObject("thumbnails");
+        JSONObject jsonObjectDefault = jsonObjectThumbnails.optJSONObject("medium");
+        String url_thumbnails = jsonObjectDefault.optString("url");
+
+        return  url_thumbnails;
+    }
+
     private static String calculateElapsedTime(String date) throws ParseException {
 
         String elapsedTime = null;
 
         date = date.replaceAll("T"," ");
         date = date.replaceAll(".000Z","");
-        Log.v(LOG_TAG,"formatter date " +date);
-
+        Log.v(LOG_TAG,"date la gi " +date);
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date datePublished = format.parse(date);
         String newDateString = format.format(datePublished);
-        Log.v(LOG_TAG,"date demo " +newDateString);
         Calendar calSet = Calendar.getInstance();
         calSet.setTime(datePublished);
 
-        Log.v(LOG_TAG,"second "+calSet.get(Calendar.SECOND));
-        Log.v(LOG_TAG,"Minute "+calSet.get(Calendar.MINUTE));
-        Log.v(LOG_TAG,"hour "+ calSet.get(HOUR_OF_DAY));
-        Log.v(LOG_TAG,"day of month "+calSet.get(Calendar.DAY_OF_MONTH));
-        Log.v(LOG_TAG," month"+calSet.get(Calendar.MONTH ));
+
 
         calSet.get(Calendar.YEAR);
-        Log.v(LOG_TAG," year "+calSet.get(Calendar.YEAR));
 //        Date datePublished = calSet.getTime();
         Calendar calNow= Calendar.getInstance();
         Date dateNow = calNow.getTime();
-        Log.v(LOG_TAG, " su khasc biet" +datePublished.getTime() +" " +dateNow.getTime());
-        Log.v(LOG_TAG,"second now "+calNow.get(Calendar.SECOND));
-        Log.v(LOG_TAG,"minute now "+calNow.get(Calendar.MINUTE));
-        Log.v(LOG_TAG,"hour now  "+calNow.get(Calendar.HOUR_OF_DAY));
-        Log.v(LOG_TAG,"day now "+calNow.get(Calendar.DAY_OF_MONTH));
-        Log.v(LOG_TAG,"month now "+calNow.get(Calendar.MONTH));
-        Log.v(LOG_TAG,"year now "+calNow.get(Calendar.YEAR));
 
 
         Interval interval = new Interval(datePublished.getTime(),dateNow.getTime());
         Period period = interval.toPeriod();
-        if (period.getYears() > 0)  elapsedTime = period.getYears() + " years ago";
-        else if (period.getMonths() > 0) elapsedTime = period.getMonths() + " months ago";
-        else if (period.getDays() > 0) elapsedTime = period.getDays() + " months ago";
-        else if (period.getHours() > 0) elapsedTime = period.getHours() +" hours ago";
-        else if (period.getMinutes() > 0) elapsedTime = period.getMinutes() +" minutes ago";
-        else if (period.getSeconds() > 0) elapsedTime = period.getSeconds() +" seconds ago";
+
+        if (period.getYears() > 0)  elapsedTime = period.getYears() + Constant.ELAPSED_TIME_YEAR;
+        else if (period.getMonths() > 0) elapsedTime = period.getMonths() + Constant.ELAPSED_TIME_MONTH;
+        else if (period.getDays() > 0) elapsedTime = period.getDays() + Constant.ELAPSED_TIME_DAY;
+        else if (period.getHours() > 0) elapsedTime = period.getHours() + Constant.ELAPSED_TIME_HOUR;
+        else if (period.getMinutes() > 0) elapsedTime = period.getMinutes() + Constant.ELAPSED_TIME_MINUTE;
+        else if (period.getSeconds() > 0) elapsedTime = period.getSeconds() + Constant.ELAPSED_TIME_SECOND;
         Log.v(LOG_TAG,elapsedTime);
         Log.v(LOG_TAG,"elapsedTime la gi "+elapsedTime);
         return elapsedTime;
     }
 
-    private static String covertDuration(String sDuration){
-        Log.v(LOG_TAG,"duration la gi " +sDuration);
-        Calendar calendar = Calendar.getInstance();
-        Period period = Period.parse(sDuration);
-        long second = period.getSeconds();
-        int hours=0 ;
-        int mininus=0;
-
-        while(second > 60) {
-            if (second >= 3600) {
-                hours = (int) (second/3600);
-                second = second%3600;
-            }
-            else if (second >= 60) {
-                mininus = (int) (second/60);
-                second = second%60;
-            }
+    private static String covertDuration(String isoDuration){
+        Log.v(LOG_TAG,"duration la gi " +isoDuration);
+        SimpleDateFormat simpleDateFormat = null;
+        if (isoDuration.contains("H")){
+            simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+            if (!isoDuration.contains("M"))
+                isoDuration = isoDuration.replace("H", "00H");
+            else if (!isoDuration.contains("S"))
+                isoDuration = isoDuration + "00S";
         }
-        calendar.set(HOUR_OF_DAY,hours);
-        calendar.set(Calendar.MINUTE,mininus);
-        calendar.set(Calendar.SECOND,(int)second);
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-        String formatted = format.format(calendar.getTime());
+        else {
+            simpleDateFormat = new SimpleDateFormat("mm:ss");
+            if (!isoDuration.contains("M"))
+                isoDuration = isoDuration.replace("PT", Constant.FORMAT_M);
+            else if (!isoDuration.contains("S"))
+                isoDuration = isoDuration + Constant.FORMAT_S;
+        }
+        Log.v(LOG_TAG,"iso duration " +isoDuration);
 
-        Log.v(LOG_TAG,"formatted "+formatted);
-        return formatted;
+        String formatted = isoDuration.replace("PT","").replace("H",":").replace("M",":").replace("S","");
+        Log.v(LOG_TAG,"thoi gian " +formatted);
+
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(formatted);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String formattedTime = simpleDateFormat.format(date);
+        return formattedTime;
     }
+
+
+
+
+    private static class LoadChannel extends AsyncTask<Void,Void,String> {
+       private String channelId;
+
+       LoadChannel(String channelId) {
+           this.channelId = channelId;
+       }
+
+       @Override
+       protected String doInBackground(Void... params) {
+            String urlChannel = Constant.URL_CHANNEL +
+                    "&id=" + channelId + "&key=" +Constant.API_KEY;
+            Log.v(LOG_TAG,"url channel  " +urlChannel);
+
+           String fetchThumbnails = null;
+           try {
+               fetchThumbnails = FetchChannelData(urlChannel);
+           } catch (JSONException e) {
+               e.printStackTrace();
+           }
+           return fetchThumbnails;
+       }
+
+        @Override
+        protected void onPostExecute(String url) {
+            url_thumbnails = url;
+            Log.v(LOG_TAG,"thumbnails channel la gi " +url_thumbnails);
+        }
+    }
+
 }
