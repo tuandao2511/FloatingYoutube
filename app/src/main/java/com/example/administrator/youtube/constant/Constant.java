@@ -6,6 +6,7 @@ package com.example.administrator.youtube.constant;
 
 public final class Constant {
     public static final String URL_DEFAULT = "https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics";
+    public static final String URL_DEFAULT_WITH_MOST_VIEW = "https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&maxResults=10&id=";
     public static final String CHART = "&chart=";
     public static final String MAX_RESULT = "&maxResults=";
     public static final String PAGE_TOKEN = "&pageToken=";
@@ -21,5 +22,16 @@ public final class Constant {
     public static final String ELAPSED_TIME_MINUTE = " minutes ago";
     public static final String ELAPSED_TIME_SECOND = " seconds ago";
     public static final String URL_CHANNEL = "https://www.googleapis.com/youtube/v3/channels?part=snippet";
+    public static final String PLAY_VIDEO_FROM_MAINACTIVITY = "playFromMain";
+    public static final String PLAY_VIDEO_FROM_SEARCHACTIVITY = "playFromSearch";
+    public static final String PLAY_VIDEO_FROM_PLAYSERVICE = "playFromService";
+    public static  final String PLAY_VIDEO_FROM_FULLSCREEN_ACTIVITY  = "playfromFullActivity";
+    public static  final String PLAY_VIDEO_FROM_MAIN_ACTIVITY_IN_SERVICE  = "playFromMainActivityInService";
+    public static final String AUTO = "default";
+    public static final String QUALITY_144P ="small";
+    public static final String QUALITY_360P ="medium";
+    public static final String QUALITY_480P ="large";
+    public static final String QUALITY_720P ="hd720";
+    public static final String QUALITY_1080P ="hd1080";
 
 }

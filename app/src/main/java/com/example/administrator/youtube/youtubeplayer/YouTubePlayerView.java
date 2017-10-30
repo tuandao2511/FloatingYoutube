@@ -23,6 +23,7 @@ public class YouTubePlayerView extends FrameLayout implements NetworkReceiver.Ne
 
     @NonNull
     private final NetworkReceiver networkReceiver;
+    private  YoutubePlayerRepeat youtubePlayerRepeat;
 
     @NonNull
     private final YouTubePlayer youTubePlayer;
@@ -39,6 +40,7 @@ public class YouTubePlayerView extends FrameLayout implements NetworkReceiver.Ne
     private final Set<YouTubePlayerFullScreenListener> fullScreenListeners;
 
     private boolean isFullScreen;
+    private boolean isInService;
 
     public YouTubePlayerView(Context context) {
         this(context, null);
@@ -54,20 +56,20 @@ public class YouTubePlayerView extends FrameLayout implements NetworkReceiver.Ne
         isFullScreen = false;
 
         youTubePlayer = new YouTubePlayer(context);
-
+        isInService = false;
         addView(youTubePlayer, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         playerControls = inflate(context, R.layout.player_controls, this);
         playerControlsWrapper = new PlayerControlsWrapper(this, playerControls);
-        playerControls.setOnTouchListener(this);
-        playbackResumer = new PlaybackResumer(this);
+        //playerControls.setOnTouchListener(this);
+        playbackResumer = new PlaybackResumer(context,this);
 
         fullScreenListeners = new HashSet<>();
         fullScreenListeners.add(playerControlsWrapper);
 
         youTubePlayer.addListener(playerControlsWrapper);
         youTubePlayer.addListener(playbackResumer);
-
+        youTubePlayer.setOnTouchListener(this);
         networkReceiver = new NetworkReceiver(this);
     }
 
@@ -87,7 +89,9 @@ public class YouTubePlayerView extends FrameLayout implements NetworkReceiver.Ne
     public void onFullScreenButtonListener(OnClickListener listener) {
         playerControlsWrapper.setOnFullScreenButtonListener(listener);
     }
-
+public void onDropImageClickListener(){
+    if(isInService)return;
+}
     public boolean isFullScreen() {
         return isFullScreen;
     }
@@ -106,14 +110,22 @@ public class YouTubePlayerView extends FrameLayout implements NetworkReceiver.Ne
         for(YouTubePlayerFullScreenListener fullScreenListener : fullScreenListeners)
             fullScreenListener.onYouTubePlayerEnterFullScreen();
     }
-
+public void setFullScreen(boolean isFullScreen){
+    this.isFullScreen  = isFullScreen;
+}
+public boolean isInService(){
+    return isInService;
+}
+    public void setInService(boolean isInService){
+        this.isInService  = isInService;
+    }
     public void exitFullScreen() {
         if(!isFullScreen)
             return;
 
         ViewGroup.LayoutParams viewParams = getLayoutParams();
         viewParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        viewParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        viewParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
         setLayoutParams(viewParams);
 
         isFullScreen = false;
@@ -136,7 +148,15 @@ public class YouTubePlayerView extends FrameLayout implements NetworkReceiver.Ne
     public boolean removeFullScreenListener(@NonNull YouTubePlayerFullScreenListener fullScreenListener) {
         return fullScreenListeners.remove(fullScreenListener);
     }
-
+    public void setOnRepeatPlayListenner(YoutubePlayerRepeat youtubePlayerRepeat){
+        this.youtubePlayerRepeat = youtubePlayerRepeat;
+    }
+    public void playRepeat(){
+        youtubePlayerRepeat.playRepeat();
+    }
+   public void onQualityChange(String quality){
+       youTubePlayer.onPlaybackQualityChange(quality);
+   }
     // calls to YouTubePlayer
 
     private boolean initialized = false;
@@ -198,6 +218,25 @@ public class YouTubePlayerView extends FrameLayout implements NetworkReceiver.Ne
         playerControlsWrapper.onNewVideo();
     }
 
+    public void setPlaybackQuality(String quality){
+        if(!initialized) {
+            Log.e("YouTubePlayerView", "the player has not been initialized");
+            return;
+        }
+        youTubePlayer.setPlaybackQuality(quality);
+    }
+    public void loadVideoWithQuality(String videoId,float startSeconds,String quality){
+        if(!initialized) {
+            Log.e("YouTubePlayerView", "the player has not been initialized");
+            return;
+        }
+        youTubePlayer.loadVideoWithQuality(videoId,startSeconds,quality);
+        playerControlsWrapper.onNewVideo();
+    }
+    public void getQuality(){
+        youTubePlayer.getQuality();
+    }
+
     /**
      * Calls {@link WebView#destroy()} on the player. And unregisters the broadcast receiver (for network events), if registered.
      * Call this method before destroying the host Fragment/Activity
@@ -227,6 +266,22 @@ public class YouTubePlayerView extends FrameLayout implements NetworkReceiver.Ne
         youTubePlayer.seekTo(time);
     }
 
+public void nextVideo(){
+    if(!initialized) {
+        Log.e("YouTubePlayerView", "the player has not been initialized");
+        return;
+    }
+    Log.e("next","onNext");
+    youTubePlayer.nextVideo();
+}
+public void prevVideo(){
+    if(!initialized) {
+        Log.e("YouTubePlayerView", "the player has not been initialized");
+        return;
+    }
+    youTubePlayer.prevVideo();
+}
+
     /**
      * See {@link YouTubePlayer#play()}
      */
@@ -251,6 +306,10 @@ public class YouTubePlayerView extends FrameLayout implements NetworkReceiver.Ne
         youTubePlayer.pause();
     }
 
+    public int getProgress(){
+        return playerControlsWrapper.getProgress();
+    }
+
     @Override
     public void onNetworkAvailable() {
         Log.d("YouTubePlayerView", "Network available.");
@@ -272,9 +331,11 @@ public class YouTubePlayerView extends FrameLayout implements NetworkReceiver.Ne
     public void setCustomActionRight(Drawable icon, View.OnClickListener clickListener) {
         playerControlsWrapper.setCustomActionRight(icon, clickListener);
     }
-
-    public void setCustomActionLeft(Drawable icon, View.OnClickListener clickListener) {
-        playerControlsWrapper.setCustomActionLeft(icon, clickListener);
+public void setCustomDropImage(boolean check,Drawable icon, View.OnClickListener clickListener){
+    playerControlsWrapper.setCustomDropImage(check,icon, clickListener);
+}
+    public void setCustomActionLeft(Drawable icon, View.OnClickListener clickListener,boolean isPrev) {
+        playerControlsWrapper.setCustomActionLeft(icon, clickListener,isPrev);
     }
 
     public void showFullScreenButton(boolean show) {
@@ -291,12 +352,12 @@ public void setOnTouchListeners(onTouchListener onTouchListener){
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        if(ontouchListener!=null) ontouchListener.onTouchListenner(motionEvent);
+        if(ontouchListener!=null) ontouchListener.onTouchListenner(view,motionEvent);
         return false;
     }
 
     public interface onTouchListener{
-    public void onTouchListenner(MotionEvent event);
+    public void onTouchListenner(View view,MotionEvent event);
 
 }
 public boolean isInitialized(){

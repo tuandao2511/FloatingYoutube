@@ -1,44 +1,79 @@
 package com.example.administrator.youtube.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 9/24/2017.
  */
 
-public class Video {
-    private String mID ;
+public class Video implements Serializable {
+
+    public void setmID(String mID) {
+        this.mID = mID;
+    }
+
+    public void setmTitle(String mTitle) {
+        this.mTitle = mTitle;
+    }
+
+    public void setmThumbnails(String mThumbnails) {
+        this.mThumbnails = mThumbnails;
+    }
+
+    public void setmViewCount(String mViewCount) {
+        this.mViewCount = mViewCount;
+    }
+
+    public void setmTitleChannel(String mTitleChannel) {
+        this.mTitleChannel = mTitleChannel;
+    }
+
+    public void setmDurationString(String mDurationString) {
+        this.mDurationString = mDurationString;
+    }
+
+    public void setmDesciption(String mDesciption) {
+        this.mDesciption = mDesciption;
+    }
+
+    public void setmChannelId(String mChannelId) {
+        this.mChannelId = mChannelId;
+    }
+
+    public void setmEslapedTime(String mEslapedTime) {
+        this.mEslapedTime = mEslapedTime;
+    }
+
+    private String mID;
     private String mTitle;
     private String mThumbnails;
-    private int mViewCount;
-    private int mLikeCount;
+    private String mViewCount;
     private String mTitleChannel;
     private String mDurationString;
     private String mDesciption;
     private String mChannelId;
     private String mEslapedTime;
-    private int mDislikeCount;
-    private String mThumbnailsChannel;
 
 
+    public Video() {
+
+    }
 
     public Video(String id, String title, String thumbnails,
-                 String titleChannel, int viewCount, int likeCount,
-                 int dislikeCount, String durationString, String description,
-                 String channelId, String eslapedTime, String thumbnailsChannel) {
+                 String titleChannel, String viewCount,
+                 String durationString,
+                 String channelId, String eslapedTime) {
 
         mID = id;
         mTitle = title;
         mThumbnails = thumbnails;
         mTitleChannel = titleChannel;
         mViewCount = viewCount;
-        mLikeCount = likeCount;
-        mDislikeCount = dislikeCount;
         mDurationString = durationString;
-        mDesciption = description;
         mChannelId = channelId;
         mEslapedTime = eslapedTime;
-        mThumbnailsChannel = thumbnailsChannel;
-
     }
+
 
     public String getID() {
         return mID;
@@ -52,13 +87,10 @@ public class Video {
         return mThumbnails;
     }
 
-    public int getViewCount() {
+    public String getViewCount() {
         return mViewCount;
     }
 
-    public int getLikeCount() {
-        return mLikeCount;
-    }
 
     public String getTitleChannel() {
         return mTitleChannel;
@@ -68,9 +100,6 @@ public class Video {
         return mDurationString;
     }
 
-    public String getDesciption() {
-        return mDesciption;
-    }
 
     public String getChannelId() {
         return mChannelId;
@@ -80,12 +109,6 @@ public class Video {
         return mEslapedTime;
     }
 
-    public int getDislikeCount() {
-        return mDislikeCount;
-    }
 
-    public String getThumbnailsChannel() {
-        return mThumbnailsChannel;
-    }
 }
 

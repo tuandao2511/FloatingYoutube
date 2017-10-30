@@ -1,5 +1,8 @@
 package com.example.administrator.youtube.youtubeplayer;
 
+import android.content.Context;
+import android.util.Log;
+
 public class PlaybackResumer implements YouTubePlayer.YouTubeListener {
 
     private boolean isPlaying = false;
@@ -7,17 +10,22 @@ public class PlaybackResumer implements YouTubePlayer.YouTubeListener {
 
     private String videoId;
     private float currentSecond;
-
+    private String quality;
     private YouTubePlayerView youTubePlayerView;
+    private Context context;
 
-    public PlaybackResumer(YouTubePlayerView youTubePlayerView) {
+    public PlaybackResumer(Context context, YouTubePlayerView youTubePlayerView) {
         this.youTubePlayerView = youTubePlayerView;
+        this.context = context;
     }
 
     public void resume() {
-        if(isPlaying && error == YouTubePlayer.Error.HTML_5_PLAYER)
-            youTubePlayerView.loadVideo(videoId, currentSecond);
-        else if(!isPlaying && error == YouTubePlayer.Error.HTML_5_PLAYER)
+        if (isPlaying && error == YouTubePlayer.Error.HTML_5_PLAYER) {
+            quality = Utils.getQualityPref(context, Utils.keyQuality);
+            youTubePlayerView.loadVideoWithQuality(videoId, 0, quality);
+        }
+        // youTubePlayerView.loadVideo(videoId, currentSecond);
+        else if (!isPlaying && error == YouTubePlayer.Error.HTML_5_PLAYER)
             youTubePlayerView.cueVideo(videoId, currentSecond);
 
         error = -1;
@@ -47,7 +55,7 @@ public class PlaybackResumer implements YouTubePlayer.YouTubeListener {
 
     @Override
     public void onPlaybackQualityChange(@YouTubePlayer.PlaybackQuality.Quality int playbackQuality) {
-
+        Log.e("qua", playbackQuality + " ");
     }
 
     @Override
@@ -57,7 +65,7 @@ public class PlaybackResumer implements YouTubePlayer.YouTubeListener {
 
     @Override
     public void onError(@YouTubePlayer.Error.PlayerError int error) {
-        if(error == YouTubePlayer.Error.HTML_5_PLAYER)
+        if (error == YouTubePlayer.Error.HTML_5_PLAYER)
             this.error = error;
     }
 
@@ -90,4 +98,6 @@ public class PlaybackResumer implements YouTubePlayer.YouTubeListener {
     public void onVideoId(String videoId) {
         this.videoId = videoId;
     }
+
+
 }

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/choose_view"
+    android:visibility="gone"
+    android:layout_alignParentBottom="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/auto"
+        android:paddingBottom="@dimen/height_12"
+        android:paddingTop="@dimen/height_12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/height_12"
+        android:text="@string/quality"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_144p"
+        android:paddingBottom="@dimen/height_12"
+        android:paddingTop="@dimen/height_12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/height_12"
+        android:text="@string/quality_144"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_360p"
+        android:paddingBottom="@dimen/height_12"
+        android:paddingTop="@dimen/height_12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/height_12"
+        android:text="@string/quality_360"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_480p"
+        android:paddingBottom="@dimen/height_12"
+        android:paddingTop="@dimen/height_12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/height_12"
+        android:text="@string/quality_480"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_720p"
+        android:paddingBottom="@dimen/height_12"
+        android:paddingTop="@dimen/height_12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/height_12"
+        android:text="@string/quality_720"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/tv_1080p"
+        android:paddingBottom="@dimen/height_12"
+        android:paddingTop="@dimen/height_12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/height_12"
+        android:text="@string/quality_1080"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold" />
+
+</LinearLayout>

@@ -40,9 +40,9 @@ public final class FetchDataVideos {
     private static final String LOG_TAG = FetchDataVideos.class.getSimpleName();
     private static final int REPONSE_CODE = 200;
     public static String nextPageToken;
-    private static String url_thumbnails;
+    private static char[] c = new char[]{'K', 'M', 'B'};
 
-    public static List<Video> FetchVideoData(String requestUrl) {
+    public static ArrayList<Video> FetchVideoData(String requestUrl) {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -57,29 +57,9 @@ public final class FetchDataVideos {
             Log.e(LOG_TAG,"Error closing input stream");
         }
 
-        List<Video> videos = extractVideos(jsonReposne);
+        ArrayList<Video> videos = extractVideos(jsonReposne);
 
         return videos;
-    }
-
-    public static String FetchChannelData(String requestUrl) throws JSONException {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        URL url = createUrl(requestUrl);
-        String jsonReposne = null;
-        try {
-            jsonReposne = makeHttpRequest(url);
-        } catch (IOException e) {
-            Log.e(LOG_TAG,"Error closing input stream");
-        }
-
-        String urlThumbnailsChannel = extractThumbnails(jsonReposne);
-
-        return urlThumbnailsChannel;
     }
 
 
@@ -146,9 +126,9 @@ public final class FetchDataVideos {
         return url;
     }
 
-    private static List<Video> extractVideos(String jsonReposne) {
+    private static ArrayList<Video> extractVideos(String jsonReposne) {
 
-        List<Video> videos = new ArrayList<>();
+        ArrayList<Video> videos = new ArrayList<>();
 
         try {
             JSONObject jsonRootObject = new JSONObject(jsonReposne);
@@ -162,7 +142,7 @@ public final class FetchDataVideos {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 JSONObject jsonObjectSnippet = jsonObject.optJSONObject("snippet");
                 JSONObject jsonObjectThumbnails = jsonObjectSnippet.optJSONObject("thumbnails");
-                JSONObject jsonObjectDefault = jsonObjectThumbnails.optJSONObject("high");
+                JSONObject jsonObjectDefault = jsonObjectThumbnails.optJSONObject("medium");
                 JSONObject jsonObjectContentDetails = jsonObject.optJSONObject("contentDetails");
                 JSONObject jsonObjectStatistics = jsonObject.optJSONObject("statistics");
 
@@ -171,25 +151,21 @@ public final class FetchDataVideos {
                 String title = jsonObjectSnippet.optString("title");
                 String thumbnails = jsonObjectDefault.optString("url");
                 String channelTitle =jsonObjectSnippet.optString("channelTitle");
-                int viewCount = jsonObjectStatistics.optInt("viewCount");
-                int likeCount = jsonObjectStatistics.optInt("likeCount");
-                int dislikeCount = jsonObjectStatistics.optInt("dislikeCount");
+                long viewCount = jsonObjectStatistics.optLong("viewCount");
                 String duration = jsonObjectContentDetails.optString("duration");
-                String description = jsonObjectSnippet.optString("description");
                 String channelId = jsonObjectSnippet.optString("channelId");
                 String dateOfPublished = jsonObjectSnippet.optString("publishedAt");
 
                 /*covert string to ...*/
                 String period = calculateElapsedTime(dateOfPublished);
                 String covertedDuration = covertDuration(duration);
+                String covertViewCount =  covertViewCount(viewCount,0);
 
-                new LoadChannel(channelId).execute();
 
-
-                videos.add(new Video(id, title, thumbnails, channelTitle, viewCount,
-                        likeCount, dislikeCount, covertedDuration, description,
-                        channelId,period, url_thumbnails));
-            }
+                videos.add(new Video(id, title, thumbnails, channelTitle, covertViewCount,
+                        covertedDuration,
+                        channelId,period ));
+                }
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -198,19 +174,17 @@ public final class FetchDataVideos {
         return videos;
     }
 
-    private static String extractThumbnails(String jsonReposne) throws JSONException {
-        JSONObject jsonRootObject = new JSONObject(jsonReposne);
-        JSONArray jsonArray = jsonRootObject.optJSONArray("items");
-        JSONObject jsonObject = jsonArray.optJSONObject(0);
-        JSONObject jsonObjectSnippet = jsonObject.optJSONObject("snippet");
-        JSONObject jsonObjectThumbnails = jsonObjectSnippet.optJSONObject("thumbnails");
-        JSONObject jsonObjectDefault = jsonObjectThumbnails.optJSONObject("medium");
-        String url_thumbnails = jsonObjectDefault.optString("url");
-
-        return  url_thumbnails;
+    public static String covertViewCount(double viewCount,int iteration) {
+        double d = ((long) viewCount / 100) / 10.0;
+        boolean isRound = (d * 10) %10 == 0;//true if the decimal part is equal to 0 (then it's trimmed anyway)
+        return (d < 1000? //this determines the class, i.e. 'k', 'm' etc
+                ((d > 99.9 || isRound || (!isRound && d > 9.99)? //this decides whether to trim the decimals
+                        (int) d * 10 / 10 : d + "" // (int) d * 10 / 10 drops the decimal
+                ) + "" + c[iteration])
+                :covertViewCount(d, iteration+1));
     }
 
-    private static String calculateElapsedTime(String date) throws ParseException {
+    public static String calculateElapsedTime(String date) throws ParseException {
 
         String elapsedTime = null;
 
@@ -245,13 +219,13 @@ public final class FetchDataVideos {
         return elapsedTime;
     }
 
-    private static String covertDuration(String isoDuration){
+    public static String covertDuration(String isoDuration){
         Log.v(LOG_TAG,"duration la gi " +isoDuration);
         SimpleDateFormat simpleDateFormat = null;
         if (isoDuration.contains("H")){
             simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
             if (!isoDuration.contains("M"))
-                isoDuration = isoDuration.replace("H", "00H");
+                isoDuration = isoDuration.replace("H", "H00:");
             else if (!isoDuration.contains("S"))
                 isoDuration = isoDuration + "00S";
         }
@@ -275,38 +249,6 @@ public final class FetchDataVideos {
         }
         String formattedTime = simpleDateFormat.format(date);
         return formattedTime;
-    }
-
-
-
-
-    private static class LoadChannel extends AsyncTask<Void,Void,String> {
-       private String channelId;
-
-       LoadChannel(String channelId) {
-           this.channelId = channelId;
-       }
-
-       @Override
-       protected String doInBackground(Void... params) {
-            String urlChannel = Constant.URL_CHANNEL +
-                    "&id=" + channelId + "&key=" +Constant.API_KEY;
-            Log.v(LOG_TAG,"url channel  " +urlChannel);
-
-           String fetchThumbnails = null;
-           try {
-               fetchThumbnails = FetchChannelData(urlChannel);
-           } catch (JSONException e) {
-               e.printStackTrace();
-           }
-           return fetchThumbnails;
-       }
-
-        @Override
-        protected void onPostExecute(String url) {
-            url_thumbnails = url;
-            Log.v(LOG_TAG,"thumbnails channel la gi " +url_thumbnails);
-        }
     }
 
 }

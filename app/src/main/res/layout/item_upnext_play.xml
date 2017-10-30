@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/root_up_next"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/thumb_video"
+        android:layout_width="150dp"
+        android:layout_height="95dp"
+        android:layout_marginBottom="@dimen/space_4"
+        android:layout_marginLeft="@dimen/space_12"
+        android:layout_marginTop="@dimen/space_12"
+        tools:src="@android:mipmap/sym_def_app_icon" />
+
+    <RelativeLayout
+        android:layout_marginLeft="@dimen/height_16"
+        android:paddingRight="@dimen/space_4"
+        android:paddingBottom="@dimen/space_4"
+        android:paddingTop="@dimen/space_12"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        >
+
+        <LinearLayout
+            android:id="@+id/content_linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/space_28"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title_video"
+                android:textColor="@color/colorBlack"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_32"
+                android:textSize="@dimen/height_12"
+                tools:text="bla bla bla bla bla bla bla bla bla lba lbalbal"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:singleLine="true"
+                android:id="@+id/author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="blalbalblablalbal"
+                android:layout_marginTop="@dimen/space_8"/>
+            <TextView
+                android:singleLine="true"
+              android:id="@+id/viewVideo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="bla bla blalb albla bal"
+                android:layout_marginTop="@dimen/space_8"/>
+
+        </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/popup"
+            android:layout_width="@dimen/space_28"
+            android:layout_height="@dimen/space_28"
+            android:layout_alignParentRight="true"
+            >
+        <ImageView
+            android:id="@+id/img_popup"
+            android:src="@drawable/ic_menu_tround"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+
+            />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

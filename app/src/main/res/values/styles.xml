@@ -4,8 +4,29 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorBlack</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="Settings" parent="android:Theme.Holo.Light.DarkActionBar"/>
+    <style name="MyCustomTablayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/red</item>
+        <item name="tabIndicatorHeight">4dp</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabSelectedTextColor">@color/red</item>
+    </style>
+<style name="Tranparent">
+    <item name="android:windowIsTranslucent">true</item>
+
+    <item name="android:windowBackground">@android:color/transparent</item>
+
+    <item name="android:windowContentOverlay">@android:color/transparent</item>
+
+    <item name="android:windowNoTitle">true</item>
+
+    <item name="android:windowIsFloating">true</item>
+
+    <item name="android:backgroundDimEnabled">true</item>
+</style>
 
 </resources>

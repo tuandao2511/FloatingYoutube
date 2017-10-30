@@ -1,55 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="300dp"
     xmlns:tools="http://schemas.android.com/tools"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:orientation="vertical">
     <!--anh hien thi video -->
     <ImageView
-        tools:src="@android:mipmap/sym_def_app_icon"
         android:id="@+id/img_thumnail"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="@dimen/height_200"
+        android:layout_marginLeft="@dimen/space_16"
+        android:layout_marginRight="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_16"
         android:scaleType="fitXY"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-       />
+        tools:src="@android:mipmap/sym_def_app_icon" />
+
     <TextView
         android:id="@+id/tv_duration"
         android:layout_width="wrap_content"
-        android:layout_height="12dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="26dp"
-        android:layout_marginBottom="10dp"
+        android:layout_height="@dimen/height_16"
         android:layout_alignBottom="@+id/img_thumnail"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/space_12"
+        android:layout_marginRight="@dimen/space_24"
         android:background="@color/colorBlack"
-        android:textColor="@color/colorWhite"
-        tools:text="3:40"
-        android:textSize="10dp"
         android:gravity="center"
-        />
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/space_12"
+        tools:text="3:40" />
+
     <ImageView
         android:id="@+id/thumbnailsChannel"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:scaleType="fitXY"
-        tools:src="@android:mipmap/sym_def_app_icon"
-        android:layout_alignTop="@+id/relativeLayout"
+        android:layout_width="@dimen/height_52"
+        android:layout_height="@dimen/height_52"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/relativeLayout"
+        android:layout_marginLeft="@dimen/space_16"
+        android:scaleType="fitXY"
+        tools:src="@android:mipmap/sym_def_app_icon" />
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_below="@+id/img_thumnail"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_toRightOf="@+id/imageLogoView"
-        android:layout_toEndOf="@+id/imageLogoView"
         android:layout_alignParentBottom="true"
-        android:id="@+id/relativeLayout">
+        android:layout_below="@+id/img_thumnail"
+        android:layout_marginRight="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_16"
+        android:layout_toEndOf="@+id/thumbnailsChannel"
+        android:layout_toRightOf="@+id/thumbnailsChannel"
+        android:orientation="horizontal">
         <!--anh logo-->
 
 
@@ -58,20 +59,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="8"
-            android:orientation="vertical"
-            android:layout_toLeftOf="@+id/imv_favorite"
-            android:layout_toStartOf="@+id/imv_favorite">
+            android:layout_marginRight="@dimen/space_28"
+            android:orientation="vertical">
             <!--content cua kenh-->
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="12dp"
-                android:text="14dp"
-                android:maxLines="1"
+                android:layout_marginLeft="@dimen/space_12"
+                android:layout_marginTop="@dimen/space_8"
                 android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@dimen/text_14"
                 android:textStyle="bold"
                 tools:text="bla bla bla bla bla bla bla bla bla " />
             <!-- luot view va thong tin kenh-->
@@ -79,22 +78,27 @@
                 android:id="@+id/infoVideo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="12dp"
-                android:maxLines="3"
+                android:layout_marginLeft="@dimen/space_12"
                 android:ellipsize="end"
+                android:maxLines="3"
                 tools:text="June - 155k View - 2days " />
             <!--thoi gian -->
 
 
         </LinearLayout>
 
-        <ImageView
-            android:src="@drawable/ic_menu_tround"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+        <RelativeLayout
+            android:layout_width="@dimen/space_28"
+            android:layout_height="@dimen/space_28"
             android:layout_alignParentRight="true"
-            android:id="@+id/imv_favorite" />
+            android:id="@+id/popup">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_menu_tround" />
+        </RelativeLayout>
 
 
     </RelativeLayout>
